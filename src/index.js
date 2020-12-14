@@ -25,27 +25,47 @@ function getCurrentPosition(f1, f2){
     f2(err)
   }
 }*/
-//let x = 0;
+
+
+//Component Lifecycle :
+//1. constructor
+//2. render -> contenu de notre composant est visible à l'écran
+//2.bis componentDidMount : exécutée dès le premier chargement du composant, une seule fois
+//............ Attendre d'eventuelles mises a jour
+//si par exemple une propritete de state est modifiee -> render
+//3. componentDidUpdate : exécuté à chaque fois qu'on fait un re-render
+//............Attendre que le composant soit supprimé
+//componentWillUnmount
+
+
 class App extends React.Component{
-  constructor(props){
-    super(props);
+  state = {lat : null, errorMessage : ""};
 
-    this.state = {lat : null};
-
+  componentDidMount(){
+    console.log("Mon composant est affiché pour la 1ere fois")
     window.navigator.geolocation.getCurrentPosition( //getCurrent position s'exétura en asynchrone
-      (position) => {
+        position => this.setState({lat : position.coords.latitude}), //callback function
         //this.state.lat ///A ne pas faire
-        this.setState({lat : position.coords.latitude});
         //!!!! pour modifier la valeur d'un paramètre de notre etat (state), il faut passer par la méthode setState()
-      }, //callback function
-      err => console.log(err) //callback function
+        err => this.setState({errorMessage : err.message}
+      ) //callback function
     );
+  }
 
+  componentDidUpdate(){
+    console.log("Mon composant a été mis à jour!")
   }
 
 
   render(){
-    return <div>Latitude : {this.state.lat}</div>;
+      if (this.state.lat && this.state.errorMessage === "") //j'ai recu la position
+        return <div>Latitude : {this.state.lat}</div>;
+
+      if(this.state.errorMessage !== "" && !this.state.lat) // j'ai un message d'erreur
+        return <div>Error : {this.state.errorMessage}</div>;
+
+      return <div> En cours de chargement ...</div>
+
   }
 }
 
