@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 /*const successFunction = (position) => {
   console.log(position);
@@ -59,7 +60,11 @@ class App extends React.Component{
 
   render(){
       if (this.state.lat && this.state.errorMessage === "") //j'ai recu la position
-        return <div>Latitude : {this.state.lat}</div>;
+        return (
+          <div className="ui container">
+            <SeasonDisplay latitude={this.state.lat}/>
+          </div>
+        );
 
       if(this.state.errorMessage !== "" && !this.state.lat) // j'ai un message d'erreur
         return <div>Error : {this.state.errorMessage}</div>;
